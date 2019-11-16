@@ -6,7 +6,9 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     attributes={"security"="is_granted('ROLE_USER')"}
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\ProjectRepository")
  */
 class Project
@@ -23,6 +25,12 @@ class Project
      */
     private $name;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="projects")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $owner;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -36,6 +44,18 @@ class Project
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): self
+    {
+        $this->owner = $owner;
 
         return $this;
     }
