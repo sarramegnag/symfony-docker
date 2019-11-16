@@ -15,21 +15,25 @@ services:
     build: .docker/php-fpm
     volumes:
       - .:/app
-#
-#  mysql:
-#    image: mysql:5.7
-#    ports:
-#      - "3306:3306"
-#    environment:
-#      MYSQL_ROOT_PASSWORD=root
-#      MYSQL_DATABASE=symfony
-#      MYSQL_USER=symfony
-#      MYSQL_PASSWORD=symfony
-#    volumes:
-#      - .data/mysql:/var/lib/mysql
-#
-#  maildev:
-#    image: djfarrelly/maildev
-#    ports:
-#      - "1080:80"
-#
+    links:
+      - mysql
+
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=symfony
+      - MYSQL_USER=symfony
+      - MYSQL_PASSWORD=symfony
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  maildev:
+    image: djfarrelly/maildev
+    ports:
+      - "1080:80"
+      
+volumes:
+  mysql-data:
